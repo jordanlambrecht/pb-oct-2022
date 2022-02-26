@@ -1,99 +1,164 @@
-import { useEffect } from 'react'
-import Link from 'next/link'
-import gsap from 'gsap/dist/gsap'
+import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
-import Nav_HamburgerNav from '@nav/Nav_HamburgerMenu'
-import Nav_NavLogo from '@nav/Nav_Logo'
+import { useEffect, useRef, useState } from 'react'
+gsap.registerPlugin(ScrollTrigger)
 
-import { Nav_Links_Button, Nav_Links_Text } from '@nav/Nav_Links'
-export default function Navbar() {
-  gsap.registerPlugin(ScrollTrigger)
+function Navbar() {
+  const [hamToggle, setHamToggle] = useState(false)
+  const ref = useRef(null)
+  const hamRef = useRef(null)
+  const logo = useRef(null)
+  const box1 = useRef(null)
+  const box2 = useRef(null)
+  const box3 = useRef(null)
+  const fullscreen = useRef(null)
+
+  const q = gsap.utils.selector(ref)
+
   useEffect(() => {
-    gsap.set('#logo', { y: -50 })
-    gsap.set('#logo-bg', { height: 100, width: 315, ease: 'sine.inOut' })
-    gsap.set(
-      ['#logo-line-1', '#logo-line-2', '#nav-link-1', '#nav-link-2', '#nav-link-3', '#nav-ham'],
-      { y: -10, opacity: 0 },
-    )
-
-    const navTL = gsap.timeline({})
-    navTL
-      .to('#logo', {
-        y: 0,
-        opacity: 1,
-        duration: 1,
-        delay: 1,
-        ease: 'back.out',
-      })
-      .to('#logo-line-1', { opacity: 1, y: 0, duration: 0.33, ease: 'back.out,' }, '<33%')
-      .to('#logo-line-2', { opacity: 1, y: 0, duration: 0.33, ease: 'back.out,' }, '<33%')
-      .to('#nav-link-1', { opacity: 1, y: 0, duration: 0.33, ease: 'back.out,' }, '<33%')
-      .to('#nav-link-2', { opacity: 1, y: 0, duration: 0.33, ease: 'back.out,' }, '<33%')
-      .to('#nav-link-3', { opacity: 1, y: 0, duration: 0.33, ease: 'back.out,' }, '<33%')
-      .to('#nav-ham', { opacity: 1, y: 0, duration: 0.33, ease: 'back.out,' }, '<33%')
-    document.onload = function () {
-      navTL.play()
-    }
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: '',
-        start: 'top',
-        end: 'top 50%',
-        toggleActions: 'play none reverse none',
-        // markers: true
+    gsap.set(q('.navItem'), { y: -64 })
+    gsap.to(q('.navItem'), 1.2, {
+      stagger: {
+        amount: 0.33,
       },
+      ease: 'back.out',
+      delay: 0.8,
+      y: 0,
+      autoAlpha: 1,
     })
-    tl.addLabel('start')
-      .to('#esign', { opacity: 0, duration: 0.4 }, '<25%')
-      .to('#tudio', { opacity: 0, duration: 0.4 }, '<25%')
-      .to('#ixel', { opacity: 0, duration: 0.4 }, '<25%')
-      .to('#akery', { opacity: 0, duration: 0.4 }, '<25%')
-      .to('#b', { x: -92, ease: 'sine.inOut', duration: 0.25 }, '<25%')
-      .from('#logo-line-2', { scale: 0.75, x: -26, y: -3, duration: 0.25 }, '<25%')
-      .to('#d', { x: 3, ease: 'sine.inOut', y: 10, duration: 0.25 }, '<')
-      .to('#s', { x: -140, ease: 'sine.inOut', y: 10, duration: 0.25 }, '<33%')
-      .to('#logo-bg', { height: 124, width: 90, ease: 'sine.inOut', duration: 0.25 }, '<')
-      .from('#logo-wrapper', { y: -9, ease: 'sine.inOut', duration: 0.25 }, '<')
-      .from('#logo', { scale: 0.8, ease: 'sine.inOut', duration: 0.25 }, '<')
-      .to('#nav-link-1', { x: 300, scale: 0, opacity: 0, ease: 'back.in', duration: 0.5 }, '<')
-      .to(
-        '#nav-link-2',
-        { x: 300, scale: 0, opacity: 0, ease: 'sine.inOut', duration: 0.5 },
-        '<25%',
-      )
-      .to('#nav-link-3', { y: -20, opacity: 0, ease: 'back.in', duration: 0.33 }, '<33%')
-      .addLabel('end')
   })
 
-  return (
-    <div className=''>
-      <div
-        className=' z-50 xl:hidden absolute bg-egg rounded-lg px-3 py-2 top-8 left-8 pointer-events-auto transform transition-all duration-400 hover:scale-105'
-        id='mobile-logo'
-      >
-        <Link href={'/'}>
-          <a className='text-4xl font-extrabold text-peach leading-none'>
-            <div>pb</div>
-            <div>ds</div>
-          </a>
-        </Link>
-      </div>
-      <div className='pointer-events-none fixed w-full top-0 mt-8 z-40 px-4 flex justify-end xl:justify-between'>
-        <Nav_NavLogo />
+  useEffect(() => {
+    gsap.to([box1.current, box2.current, box3.current], {
+      scrollTrigger: {
+        trigger: 'body',
+        pinReparent: true,
+        start: 'top',
+        end: () => innerHeight / 2 + 'top',
+        // toggleActions: 'play pause resume reset',
+        toggleActions: 'play none reverse none',
+        markers: true,
+      },
+      stagger: {
+        amount: 0.25,
+      },
+      ease: 'back.out',
+      y: -50,
+      autoAlpha: 0,
+    })
+  }, [box1, box2, box3])
 
-        <div className='pr-8  h-full flex'>
-          <Nav_Links_Text id={'nav-link-1'} url={'/work'} text={'what we do'} />
-          <Nav_Links_Text id={'nav-link-2'} url={'/about'} text={'who we are'} />
-          <Nav_Links_Button id={'nav-link-3'} url={'/onboarding'} text={'start a project'} />
-          <Nav_HamburgerNav />
+  // useEffect(() => {
+  //   gsap.to(q('.navItem'), {
+  //     scrollTrigger: {
+  //       trigger: 'body',
+  //       scrub: true,
+  //       // start: 'top top',
+  //       end: () => innerHeight / 2 + 'top',
+  //       toggleActions: 'play pause resume reset',
+  //       markers: true,
+  //     },
+  //     stagger: {
+  //       amount: 0.25,
+  //     },
+  //     ease: 'back.out',
+  //     y: 50,
+  //   })
+  // }, [])
+  // function HandleHamToggle() {
+  //   setHamToggle(!hamToggle)
+  // }stagger: {
+  //       amount: 0.25,
+  //     },
+
+  // useEffect(() => {
+  //   const element = ref.current
+  //   gsap.to(element.querySelectorAll('.navItem'), {
+  // stagger: {
+  //   amount: 0.25,
+  // },
+  // scrollTrigger: {
+  //   trigger: 'body',
+  //   scrub: true,
+  //   start: 'top top',
+  //   end: () => innerHeight / 2 + 'top',
+  //   markers: true,
+  // },
+  //     scale: 0,
+  //     autoAlpha: 0,
+  //     ease: 'none',
+  //   })
+  // }, [])
+
+  // Scroll Downwards
+  // useEffect(() => {
+  //   gsap.to([box1, box2], {
+  //     delay: 0.8,
+  //     y: -64,
+  //     scrollTrigger: {
+  //       trigger: 'body', // technically not neccessary - when you don't pin anything, the body will be the default
+  //       start: 0,
+  //       end: () => innerHeight / 2 + ' top',
+  //       scrub: true,
+  //       markers: true,
+  //     },
+  //   })
+  // }, [box1, box2])
+
+  useEffect(() => {
+    if (!hamToggle) {
+      document.body.classList.remove('overflow-y-hidden')
+      gsap.to(fullscreen.current, {
+        autoAlpha: 0,
+      })
+      gsap.to(hamRef.current, {
+        rotate: 0,
+      })
+    } else {
+      gsap.to(fullscreen.current, {
+        autoAlpha: 1,
+      })
+      gsap.to(hamRef.current, {
+        rotate: 180,
+      })
+      document.body.classList.add('overflow-y-hidden')
+    }
+  }, [hamToggle])
+
+  return (
+    <div>
+      <div ref={ref}>
+        <div
+          ref={logo}
+          className='navItem origin-top-left ml-8 mt-8 fixed top-0 left-0 w-32 h-32 bg-peach z-50 opacity-0 '
+        >
+          <p>logo here</p>
+        </div>
+
+        <div className='mt-8 mr-8 fixed top-0 right-0 z-50 flex justify-end gap-x-6'>
+          <div ref={box1} className='  bg-peach z-50   opacity-0 navItem'>
+            <p>what we make</p>
+          </div>
+          <div ref={box2} className=' bg-peach z-50  opacity-0 navItem'>
+            <p>who we are</p>
+          </div>
+          <div ref={box3} className='  bg-peach z-50  opacity-0 navItem'>
+            <p>start a project</p>
+          </div>
+          <div
+            ref={hamRef}
+            onClick={() => setHamToggle(!hamToggle)}
+            className='  w-16 h-16 bg-peach z-50 opacity-0 cursor-pointer navItem'
+          >
+            <p>{hamToggle.toString()}</p>
+          </div>
         </div>
       </div>
-
-      {/* <nav className=' fixed w-full flex justify-center'>
-        <Link href={'/sitemap'}>
-          <a className='underline pointer-events-auto'>Sitemap</a>
-        </Link>
-      </nav> */}
+      <div
+        ref={fullscreen}
+        className='fixed overflow-hidden top-0 left-0 w-screen h-screen bg-blue z-40 opacity-0'
+      ></div>
     </div>
   )
 }
+export default Navbar
